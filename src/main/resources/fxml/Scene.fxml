@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.warmachine.storefinder.FXMLController">
+<children>
+<SplitPane dividerPositions="0.25, 0.7506" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+<items>
+<AnchorPane>
+<children>
+<Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style=" " text="Your Location" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
+<font>
+<Font size="18.0" fx:id="x1" />
+</font>
+</Label>
+<TextField fx:id="AddrLine" layoutX="0.3759765625" layoutY="61.5" promptText="Address Line" AnchorPane.leftAnchor="0.3759765625" AnchorPane.rightAnchor="-0.3759765625" />
+<TextField fx:id="KiloLine" layoutX="95.0" layoutY="165.0" prefWidth="35.0" text="5" />
+<Label fx:id="SearchLabel" layoutX="3.0" layoutY="170.0" text="Search Within" />
+<Label fx:id="kLabel" layoutX="136.0" layoutY="170.0" text="k" />
+<TextField fx:id="CityLine" layoutX="0.751953125" layoutY="93.5" promptText="City" />
+<TextField fx:id="ZipLine" layoutY="125.0" prefHeight="25.0" prefWidth="67.0" promptText="Zip" /><Button fx:id="SearchButton" layoutX="44.7275390625" layoutY="214.0" mnemonicParsing="false" onMouseClicked="#handleSearch" text="Search" />
+</children>
+</AnchorPane>
+<ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="-1.0" prefWidth="-1.0">
+<content>
+<AnchorPane id="Content" fx:id="ScrollAnchor" minHeight="-1.0" minWidth="-1.0" prefHeight="476.0" prefWidth="341.0">
+<children>
+<Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" prefHeight="21.0" prefWidth="67.0" style=" " text="View" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false" /><Accordion fx:id="Results" layoutY="41.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="435.0" prefWidth="340.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="41.0" />
+</children>
+</AnchorPane>
+</content>
+</ScrollPane>
+<AnchorPane>
+<children>
+<Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style=" " text="Details" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false" />
+</children>
+</AnchorPane>
+</items>
+</SplitPane>
+<HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
+<children>
+<Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
+<font>
+<Font size="11.0" fx:id="x3" />
+</font>
+<textFill>
+<Color blue="0.625" green="0.625" red="0.625" fx:id="x4" />
+</textFill>
+</Label>
+<Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+<Label font="$x3" maxWidth="-1.0" text="Right status" textFill="$x4" HBox.hgrow="NEVER" />
+</children>
+<padding>
+<Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+</padding>
+</HBox>
+</children>
+</VBox>
