@@ -28,8 +28,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.bson.BSONObject;
-import org.bson.BasicBSONObject;
 
 public class FXMLController implements Initializable {
     
@@ -63,6 +61,8 @@ public class FXMLController implements Initializable {
     private Accordion Results;
     
     private BasicDBObject storeInfo;
+    @FXML
+    private Accordion Details;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -96,9 +96,7 @@ public class FXMLController implements Initializable {
 
         
            List<DBObject> store = colls.find(storeInfo).toArray();
-        
-        
-        
+                
         for(DBObject s : store){
         GridPane pane = new GridPane();
         pane.addColumn(0, new Label("Address: "));
