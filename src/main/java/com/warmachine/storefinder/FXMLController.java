@@ -4,8 +4,10 @@ import com.google.code.geocoder.Geocoder;
 import com.google.code.geocoder.GeocoderRequestBuilder;
 import com.google.code.geocoder.model.GeocodeResponse;
 import com.google.code.geocoder.model.GeocoderRequest;
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
@@ -16,6 +18,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Accordion;
@@ -94,11 +97,14 @@ public class FXMLController implements Initializable {
             
             storeInfo.put("loc",new BasicDBObject("$near", new BasicDBObject("$geometry", new BasicDBObject("type","Point").append("coordinates", coordinates))).append("$maxDistance", Integer.parseInt(KiloLine.getText()+"000")));
 
-        Results.getPanes().clear();
-           List<DBObject> store = colls.find(storeInfo).toArray();
+            Results.getPanes().clear();
+        
+            DBCursor cursor = colls.find(storeInfo);
                 
-        for(DBObject s : store){
+        for(DBObject s : cursor){
         GridPane pane = new GridPane();
+        GridPane detailPane = new GridPane();
+        
         pane.addColumn(0, new Label("Address: "));
         pane.addRow(0, new Label(s.get("Address").toString()));
         
@@ -112,6 +118,25 @@ public class FXMLController implements Initializable {
         pane.addRow(3, new Label(s.get("Phone").toString()));
         
         TitledPane t3 = new TitledPane(s.get("Store").toString(), pane );
+        
+        BasicDBList times = (BasicDBList) cursor.next().get("Monday");
+        
+        detailPane.addRow(0, new Label("Open: "));
+        detailPane.addRow(0, new Label(times.get(0).toString()));
+        
+        detailPane.addRow(1, new Label("Close: "));
+        detailPane.addRow(1, new Label(times.get(1).toString()));
+        
+        final TitledPane t2 = new TitledPane("Monday", detailPane );
+        
+        t3.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                        @Override
+                        public void handle(MouseEvent event) { 
+                        Details.getPanes().clear();
+                        Details.getPanes().add(t2);
+                        };
+                    });
+        
         Results.getPanes().add(t3);
         }
         
