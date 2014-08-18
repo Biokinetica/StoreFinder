@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -100,7 +99,7 @@ public class FXMLController implements Initializable {
             Results.getPanes().clear();
         
             DBCursor cursor = colls.find(storeInfo);
-                
+                            
         for(DBObject s : cursor){
         GridPane pane = new GridPane();
         GridPane detailPane = new GridPane();
