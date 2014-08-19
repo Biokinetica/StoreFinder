@@ -15,7 +15,10 @@ import com.mongodb.ServerAddress;
 import java.io.IOException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -99,7 +102,9 @@ public class FXMLController implements Initializable {
             Results.getPanes().clear();
         
             DBCursor cursor = colls.find(storeInfo);
-                            
+            
+            LocalDate ld = LocalDate.now();
+        
         for(DBObject s : cursor){
         GridPane pane = new GridPane();
         GridPane detailPane = new GridPane();
@@ -118,7 +123,7 @@ public class FXMLController implements Initializable {
         
         TitledPane t3 = new TitledPane(s.get("Store").toString(), pane );
         
-        BasicDBList times = (BasicDBList) cursor.next().get("Monday");
+        BasicDBList times = (BasicDBList) cursor.next().get(ld.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US));
         
         detailPane.addRow(0, new Label("Open: "));
         detailPane.addRow(0, new Label(times.get(0).toString()));
@@ -126,7 +131,7 @@ public class FXMLController implements Initializable {
         detailPane.addRow(1, new Label("Close: "));
         detailPane.addRow(1, new Label(times.get(1).toString()));
         
-        final TitledPane t2 = new TitledPane("Monday", detailPane );
+        final TitledPane t2 = new TitledPane(ld.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US), detailPane );
         
         t3.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                         @Override
