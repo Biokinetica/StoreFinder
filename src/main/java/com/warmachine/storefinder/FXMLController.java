@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Arrays;
 import java.util.Locale;
@@ -121,9 +122,11 @@ public class FXMLController implements Initializable {
         pane.addRow(3, new Label("Phone: "));
         pane.addRow(3, new Label(s.get("Phone").toString()));
         
-        TitledPane t3 = new TitledPane(s.get("Store").toString(), pane );
+        TitledPane t = new TitledPane(s.get("Store").toString(), pane );
         
-        BasicDBList times = (BasicDBList) cursor.next().get(ld.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US));
+        DBObject res = cursor.next();
+        
+        BasicDBList times = (BasicDBList) res.get(ld.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US));
         
         detailPane.addRow(0, new Label("Open: "));
         detailPane.addRow(0, new Label(times.get(0).toString()));
@@ -131,17 +134,78 @@ public class FXMLController implements Initializable {
         detailPane.addRow(1, new Label("Close: "));
         detailPane.addRow(1, new Label(times.get(1).toString()));
         
-        final TitledPane t2 = new TitledPane(ld.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US), detailPane );
+        final TitledPane t1 = new TitledPane(ld.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US), detailPane );
         
-        t3.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+        GridPane detailPane1 = new GridPane();
+        BasicDBList times1 = (BasicDBList) res.get(ld.minusDays(1).format(DateTimeFormatter.ofPattern("EEEE")));
+        detailPane1.addRow(0, new Label("Open: "));
+        detailPane1.addRow(0, new Label(times1.get(0).toString()));
+        
+        detailPane1.addRow(1, new Label("Close: "));
+        detailPane1.addRow(1, new Label(times1.get(1).toString()));
+        
+        final TitledPane t2 = new TitledPane(ld.minusDays(1).format(DateTimeFormatter.ofPattern("EEEE")), detailPane1);
+        
+        GridPane detailPane2 = new GridPane();
+        BasicDBList times2 = (BasicDBList) res.get(ld.minusDays(2).format(DateTimeFormatter.ofPattern("EEEE")));
+        detailPane2.addRow(0, new Label("Open: "));
+        detailPane2.addRow(0, new Label(times2.get(0).toString()));
+        
+        detailPane2.addRow(1, new Label("Close: "));
+        detailPane2.addRow(1, new Label(times2.get(1).toString()));
+        
+        final TitledPane t3 = new TitledPane(ld.minusDays(2).format(DateTimeFormatter.ofPattern("EEEE")), detailPane2);
+        
+        GridPane detailPane3 = new GridPane();
+        BasicDBList times3 = (BasicDBList) res.get(ld.minusDays(2).format(DateTimeFormatter.ofPattern("EEEE")));
+        detailPane3.addRow(0, new Label("Open: "));
+        detailPane3.addRow(0, new Label(times3.get(0).toString()));
+        
+        detailPane3.addRow(1, new Label("Close: "));
+        detailPane3.addRow(1, new Label(times3.get(1).toString()));
+        
+        final TitledPane t4 = new TitledPane(ld.minusDays(3).format(DateTimeFormatter.ofPattern("EEEE")), detailPane3);
+        
+        GridPane detailPane4 = new GridPane();
+        BasicDBList times4 = (BasicDBList) res.get(ld.minusDays(4).format(DateTimeFormatter.ofPattern("EEEE")));
+        detailPane4.addRow(0, new Label("Open: "));
+        detailPane4.addRow(0, new Label(times4.get(0).toString()));
+        
+        detailPane4.addRow(1, new Label("Close: "));
+        detailPane4.addRow(1, new Label(times4.get(1).toString()));
+        
+        final TitledPane t5 = new TitledPane(ld.minusDays(4).format(DateTimeFormatter.ofPattern("EEEE")), detailPane4);
+        
+        GridPane detailPane5 = new GridPane();
+        BasicDBList times5 = (BasicDBList) res.get(ld.minusDays(5).format(DateTimeFormatter.ofPattern("EEEE")));
+        detailPane5.addRow(0, new Label("Open: "));
+        detailPane5.addRow(0, new Label(times5.get(0).toString()));
+        
+        detailPane5.addRow(1, new Label("Close: "));
+        detailPane5.addRow(1, new Label(times5.get(1).toString()));
+        
+        final TitledPane t6 = new TitledPane(ld.minusDays(5).format(DateTimeFormatter.ofPattern("EEEE")), detailPane5);
+        
+        GridPane detailPane6 = new GridPane();
+        BasicDBList times6 = (BasicDBList) res.get(ld.minusDays(6).format(DateTimeFormatter.ofPattern("EEEE")));
+        detailPane6.addRow(0, new Label("Open: "));
+        detailPane6.addRow(0, new Label(times6.get(0).toString()));
+        
+        detailPane6.addRow(1, new Label("Close: "));
+        detailPane6.addRow(1, new Label(times6.get(1).toString()));
+        
+        final TitledPane t7 = new TitledPane(ld.minusDays(6).format(DateTimeFormatter.ofPattern("EEEE")), detailPane6);
+        
+        
+        t.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) { 
                         Details.getPanes().clear();
-                        Details.getPanes().add(t2);
+                        Details.getPanes().addAll(t1,t2,t3,t4,t5,t6,t7);
                         };
                     });
         
-        Results.getPanes().add(t3);
+        Results.getPanes().add(t);
         }
         
     }

@@ -23,7 +23,7 @@
 <Label fx:id="kLabel" layoutX="136.0" layoutY="170.0" text="k" />
 <TextField fx:id="CityLine" layoutX="0.751953125" layoutY="93.5" promptText="City" />
 <TextField fx:id="ZipLine" layoutY="125.0" prefHeight="25.0" prefWidth="67.0" promptText="Zip" />
-<TextField fx:id="KiloLine" layoutX="95.0" layoutY="165.0" prefWidth="35.0" text="5" /><Button fx:id="SearchButton" layoutX="44.7275390625" layoutY="214.0" mnemonicParsing="false" onMouseClicked="#handleSearch" text="Search" />
+<TextField fx:id="KiloLine" layoutX="95.0" layoutY="165.0" prefWidth="35.0" text="15" /><Button fx:id="SearchButton" layoutX="44.7275390625" layoutY="214.0" mnemonicParsing="false" onMouseClicked="#handleSearch" text="Search" />
 </children>
 </AnchorPane>
 <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="-1.0" prefWidth="-1.0">
