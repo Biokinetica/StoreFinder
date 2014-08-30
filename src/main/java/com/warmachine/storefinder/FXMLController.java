@@ -73,12 +73,12 @@ public class FXMLController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-                address = new ServerAddress("ec2-54-82-163-131.compute-1.amazonaws.com",27017);
+                address = new ServerAddress("ds049858.mongolab.com",49858);
             } catch (UnknownHostException ex) {
                 System.out.println(ex.getLocalizedMessage());
             }
         
-        MongoCredential creds = MongoCredential.createMongoCRCredential("User", "project", "WarmaHordes".toCharArray());
+        MongoCredential creds = MongoCredential.createMongoCRCredential("User", "warmachine1", "WarmaHordes".toCharArray());
             mongoClient = new MongoClient(address, Arrays.asList(creds));
             storeInfo = new BasicDBObject();
     }    
@@ -86,7 +86,7 @@ public class FXMLController implements Initializable {
     @FXML
     private void handleSearch(MouseEvent event) throws IOException {
         
-        DBCollection colls = mongoClient.getDB("project").getCollection("Stores");
+        DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
         
         
         double coordinates[] = new double[2];
