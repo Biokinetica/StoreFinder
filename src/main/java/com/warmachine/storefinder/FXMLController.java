@@ -94,6 +94,12 @@ public class FXMLController implements Initializable {
             handleSearch(m);
     }
     
+    @FXML
+    private void ZipFieldEnter(KeyEvent event) throws IOException {
+        MouseEvent m = null;
+        if(event.getCode() == KeyCode.ENTER)
+            handleSearch(m);
+    }
     
     @FXML
     private void handleSearch(MouseEvent event) throws IOException {
