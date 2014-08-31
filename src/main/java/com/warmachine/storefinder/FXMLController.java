@@ -29,6 +29,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -70,6 +72,8 @@ public class FXMLController implements Initializable {
     @FXML
     private Accordion Details;
     
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
@@ -82,7 +86,15 @@ public class FXMLController implements Initializable {
             mongoClient = new MongoClient(address, Arrays.asList(creds));
             storeInfo = new BasicDBObject();
     }    
-
+    
+    @FXML
+    private void CityFieldEnter(KeyEvent event) throws IOException {
+        MouseEvent m = null;
+        if(event.getCode() == KeyCode.ENTER)
+            handleSearch(m);
+    }
+    
+    
     @FXML
     private void handleSearch(MouseEvent event) throws IOException {
         
@@ -96,10 +108,12 @@ public class FXMLController implements Initializable {
             final Geocoder geocoder = new Geocoder();
             GeocoderRequest geocoderRequest;
             
-        if(AddrLine.getLength() == 0)
-           geocoderRequest = new GeocoderRequestBuilder().setAddress(CityLine.getText() + ", MI ").setLanguage("en").getGeocoderRequest();
-            else
-                geocoderRequest = new GeocoderRequestBuilder().setAddress(AddrLine.getText() + " " + CityLine.getText() + ", MI " + ZipLine.getText() ).setLanguage("en").getGeocoderRequest();
+        if(AddrLine.getLength() == 0 && CityLine.getLength() == 0)
+           geocoderRequest = new GeocoderRequestBuilder().setAddress(ZipLine.getText() + ", MI ").setLanguage("en").getGeocoderRequest();
+        else if(AddrLine.getLength() == 0)
+            geocoderRequest = new GeocoderRequestBuilder().setAddress(CityLine.getText() + ", MI ").setLanguage("en").getGeocoderRequest();
+        else
+            geocoderRequest = new GeocoderRequestBuilder().setAddress(AddrLine.getText() + " " + CityLine.getText() + ", MI " + ZipLine.getText() ).setLanguage("en").getGeocoderRequest();
             
          GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
 
@@ -140,7 +154,7 @@ public class FXMLController implements Initializable {
         BasicDBList PGs = (BasicDBList) s.get("PG");
         int index = 0;
         while(index != PGs.size()){
-        pane.addRow(5, new Label(PGs.get(index).toString()));
+        pane.addColumn(1, new Label(PGs.get(index).toString()));
         ++index;
             }
         }
@@ -230,4 +244,6 @@ public class FXMLController implements Initializable {
         }
         
     }
+
+    
 }
