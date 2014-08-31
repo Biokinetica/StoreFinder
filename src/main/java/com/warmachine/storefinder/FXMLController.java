@@ -133,14 +133,14 @@ public class FXMLController implements Initializable {
         pane.addRow(5, new Label("Press Gangers: "));
         
         if(s.containsField("OP")){
-            pane.addColumn(1, new Label(s.get("OP").toString()));
+            pane.addRow(4, new Label(s.get("OP").toString()));
         }
         
         if(s.containsField("PG")){
         BasicDBList PGs = (BasicDBList) s.get("PG");
         int index = 0;
         while(index != PGs.size()){
-        pane.addColumn(1, new Label(PGs.get(index).toString()));
+        pane.addRow(5, new Label(PGs.get(index).toString()));
         ++index;
             }
         }
