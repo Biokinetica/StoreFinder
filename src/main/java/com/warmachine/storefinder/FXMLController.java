@@ -129,8 +129,12 @@ public class FXMLController implements Initializable {
         
         pane.addRow(3, new Label("Phone: "));
         pane.addRow(3, new Label(s.get("Phone").toString()));
+        pane.addRow(4, new Label("Open Play: "));
+        pane.addRow(5, new Label("Press Gangers: "));
         
-        pane.addRow(4, new Label("Press Gangers: "));
+        if(s.containsField("OP")){
+            pane.addColumn(1, new Label(s.get("OP").toString()));
+        }
         
         if(s.containsField("PG")){
         BasicDBList PGs = (BasicDBList) s.get("PG");
