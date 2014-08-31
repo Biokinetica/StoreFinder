@@ -86,13 +86,21 @@ public class FXMLController implements Initializable {
     @FXML
     private void handleSearch(MouseEvent event) throws IOException {
         
+        Details.getPanes().clear();
+        
         DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
         
         
         double coordinates[] = new double[2];
             
             final Geocoder geocoder = new Geocoder();
-         GeocoderRequest geocoderRequest = new GeocoderRequestBuilder().setAddress(AddrLine.getText() + " " + CityLine.getText() + ", MI " + ZipLine.getText() ).setLanguage("en").getGeocoderRequest();
+            GeocoderRequest geocoderRequest;
+            
+        if(AddrLine.getLength() == 0)
+           geocoderRequest = new GeocoderRequestBuilder().setAddress(CityLine.getText() + ", MI ").setLanguage("en").getGeocoderRequest();
+            else
+                geocoderRequest = new GeocoderRequestBuilder().setAddress(AddrLine.getText() + " " + CityLine.getText() + ", MI " + ZipLine.getText() ).setLanguage("en").getGeocoderRequest();
+            
          GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
 
             coordinates[0] = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLng().doubleValue();
