@@ -122,6 +122,16 @@ public class FXMLController implements Initializable {
         pane.addRow(3, new Label("Phone: "));
         pane.addRow(3, new Label(s.get("Phone").toString()));
         
+        pane.addRow(4, new Label("Press Gangers: "));
+        
+        if(s.containsField("PG")){
+        BasicDBList PGs = (BasicDBList) s.get("PG");
+        int index = 0;
+        while(index != PGs.size()){
+        pane.addColumn(1, new Label(PGs.get(index).toString()));
+        ++index;
+            }
+        }
         TitledPane t = new TitledPane(s.get("Store").toString(), pane );
         
         DBObject res = cursor.next();
@@ -195,7 +205,6 @@ public class FXMLController implements Initializable {
         detailPane6.addRow(1, new Label(times6.get(1).toString()));
         
         final TitledPane t7 = new TitledPane(ld.minusDays(6).format(DateTimeFormatter.ofPattern("EEEE")), detailPane6);
-        
         
         t.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                         @Override
