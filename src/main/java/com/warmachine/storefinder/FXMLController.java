@@ -102,6 +102,13 @@ public class FXMLController implements Initializable {
     }
     
     @FXML
+    private void KiloFieldEnter(KeyEvent event) throws IOException {
+        MouseEvent m = null;
+        if(event.getCode() == KeyCode.ENTER)
+            handleSearch(m);
+    }
+    
+    @FXML
     private void handleSearch(MouseEvent event) throws IOException {
         
         Hours.getPanes().clear();
@@ -169,7 +176,7 @@ public class FXMLController implements Initializable {
             }
         }
         TitledPane t = new TitledPane(s.get("Store").toString(), pane );
-        
+
         DBObject res = cursor.next();
         
         BasicDBList times = (BasicDBList) res.get(ld.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US));
