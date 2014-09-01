@@ -30,14 +30,15 @@
 <content>
 <AnchorPane id="Content" fx:id="ScrollAnchor" minHeight="-1.0" minWidth="-1.0" prefHeight="476.0" prefWidth="341.0">
 <children>
-<Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" prefHeight="21.0" prefWidth="67.0" style=" " text="View" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false" /><Accordion fx:id="Results" layoutY="41.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="435.0" prefWidth="340.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="41.0" />
+<Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" prefHeight="21.0" prefWidth="67.0" style=" " text="Results" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false" /><Accordion fx:id="Results" layoutY="41.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="435.0" prefWidth="340.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="41.0" />
 </children>
 </AnchorPane>
 </content>
 </ScrollPane>
 <AnchorPane>
 <children>
-<Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style=" " text="Details" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false" /><Accordion fx:id="Details" layoutY="35.0" prefHeight="440.0" prefWidth="170.0" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0" />
+<Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style=" " text="Hours" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false" />
+                  <Accordion fx:id="Hours" layoutY="41.0" prefHeight="435.0" prefWidth="171.0" />
 </children>
 </AnchorPane>
 </items>

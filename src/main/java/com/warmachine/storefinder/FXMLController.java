@@ -70,7 +70,7 @@ public class FXMLController implements Initializable {
     
     private BasicDBObject storeInfo;
     @FXML
-    private Accordion Details;
+    private Accordion Hours;
     
     
     
@@ -104,7 +104,7 @@ public class FXMLController implements Initializable {
     @FXML
     private void handleSearch(MouseEvent event) throws IOException {
         
-        Details.getPanes().clear();
+        Hours.getPanes().clear();
         
         DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
         
@@ -245,8 +245,8 @@ public class FXMLController implements Initializable {
         t.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) { 
-                        Details.getPanes().clear();
-                        Details.getPanes().addAll(t1,t2,t3,t4,t5,t6,t7);
+                        Hours.getPanes().clear();
+                        Hours.getPanes().addAll(t1,t2,t3,t4,t5,t6,t7);
                         };
                     });
         
