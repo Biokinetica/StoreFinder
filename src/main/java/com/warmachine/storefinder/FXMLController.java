@@ -159,8 +159,12 @@ public class FXMLController implements Initializable {
         if(s.containsField("PG")){
         BasicDBList PGs = (BasicDBList) s.get("PG");
         int index = 0;
-        while(index != PGs.size()){
-        pane.addColumn(1, new Label(PGs.get(index).toString()));
+        
+        if(PGs.size() == 1)
+            pane.addRow(5, new Label(PGs.get(index).toString()) );
+        else
+            while(index != PGs.size()){
+        pane.addColumn(1,new Label(PGs.get(index).toString()));
         ++index;
             }
         }
