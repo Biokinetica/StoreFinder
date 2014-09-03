@@ -38,7 +38,7 @@
 <AnchorPane>
 <children>
 <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style=" " text="Hours" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false" />
-                  <Accordion fx:id="Hours" layoutY="41.0" prefHeight="435.0" prefWidth="171.0" />
+                  <Accordion fx:id="Hours" layoutY="41.0" prefHeight="435.0" prefWidth="171.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="41.0" />
 </children>
 </AnchorPane>
 </items>

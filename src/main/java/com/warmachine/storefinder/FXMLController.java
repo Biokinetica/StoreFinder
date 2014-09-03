@@ -12,8 +12,11 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -29,6 +32,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -36,6 +41,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javax.imageio.ImageIO;
 
 public class FXMLController implements Initializable {
     
@@ -111,6 +117,7 @@ public class FXMLController implements Initializable {
     @FXML
     private void handleSearch(MouseEvent event) throws IOException {
         
+        
         Hours.getPanes().clear();
         
         DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
@@ -158,6 +165,22 @@ public class FXMLController implements Initializable {
         pane.addRow(3, new Label(s.get("Phone").toString()));
         pane.addRow(4, new Label("Open Play: "));
         pane.addRow(5, new Label("Press Gangers: "));
+        
+        BasicDBObject loc = (BasicDBObject) s.get("loc");
+        BasicDBList coords = (BasicDBList) loc.get("coordinates");
+        String url = "http://maps.googleapis.com/maps/api/staticmap?center=" + URLEncoder.encode(s.get("Address").toString(),"UTF-8") + "," 
+                + URLEncoder.encode(s.get("City").toString(),"UTF-8")
+                + ",MI&zoom=14&size=300x200&maptype=roadmap&markers=color:red%7Clabel:A%7C"
+                + coords.get(1) + "," + coords.get(0);
+                
+        BufferedImage img = ImageIO.read(new URL(url));
+        File outputfile = new File(s.get("Store").toString()+".png");
+        ImageIO.write(img, "png", outputfile);
+        
+        ImageView iv = new ImageView();
+        iv.setImage(new Image(url));
+        
+        pane.add(iv,1,6);
         
         if(s.containsField("OP")){
             pane.addRow(4, new Label(s.get("OP").toString()));
