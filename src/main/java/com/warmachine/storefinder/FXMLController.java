@@ -210,7 +210,7 @@ public class FXMLController implements Initializable {
         final TitledPane t3 = new TitledPane(ld.minusDays(2).format(DateTimeFormatter.ofPattern("EEEE")), hoursPane2);
         
         GridPane hoursPane3 = new GridPane();
-        BasicDBList times3 = (BasicDBList) res.get(ld.minusDays(2).format(DateTimeFormatter.ofPattern("EEEE")));
+        BasicDBList times3 = (BasicDBList) res.get(ld.minusDays(3).format(DateTimeFormatter.ofPattern("EEEE")));
         hoursPane3.addRow(0, new Label("Open: "));
         hoursPane3.addRow(0, new Label(times3.get(0).toString()));
         
