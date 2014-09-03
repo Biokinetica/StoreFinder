@@ -143,7 +143,7 @@ public class FXMLController implements Initializable {
         
         for(DBObject s : cursor){
         GridPane pane = new GridPane();
-        GridPane detailPane = new GridPane();
+        GridPane hoursPane = new GridPane();
         
         pane.addColumn(0, new Label("Address: "));
         pane.addRow(0, new Label(s.get("Address").toString()));
@@ -181,73 +181,73 @@ public class FXMLController implements Initializable {
         
         BasicDBList times = (BasicDBList) res.get(ld.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US));
         
-        detailPane.addRow(0, new Label("Open: "));
-        detailPane.addRow(0, new Label(times.get(0).toString()));
+        hoursPane.addRow(0, new Label("Open: "));
+        hoursPane.addRow(0, new Label(times.get(0).toString()));
         
-        detailPane.addRow(1, new Label("Close: "));
-        detailPane.addRow(1, new Label(times.get(1).toString()));
+        hoursPane.addRow(1, new Label("Close: "));
+        hoursPane.addRow(1, new Label(times.get(1).toString()));
         
-        final TitledPane t1 = new TitledPane(ld.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US), detailPane );
+        final TitledPane t1 = new TitledPane(ld.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US), hoursPane );
         
-        GridPane detailPane1 = new GridPane();
+        GridPane hoursPane1 = new GridPane();
         BasicDBList times1 = (BasicDBList) res.get(ld.minusDays(1).format(DateTimeFormatter.ofPattern("EEEE")));
-        detailPane1.addRow(0, new Label("Open: "));
-        detailPane1.addRow(0, new Label(times1.get(0).toString()));
+        hoursPane1.addRow(0, new Label("Open: "));
+        hoursPane1.addRow(0, new Label(times1.get(0).toString()));
         
-        detailPane1.addRow(1, new Label("Close: "));
-        detailPane1.addRow(1, new Label(times1.get(1).toString()));
+        hoursPane1.addRow(1, new Label("Close: "));
+        hoursPane1.addRow(1, new Label(times1.get(1).toString()));
         
-        final TitledPane t2 = new TitledPane(ld.minusDays(1).format(DateTimeFormatter.ofPattern("EEEE")), detailPane1);
+        final TitledPane t2 = new TitledPane(ld.minusDays(1).format(DateTimeFormatter.ofPattern("EEEE")), hoursPane1);
         
-        GridPane detailPane2 = new GridPane();
+        GridPane hoursPane2 = new GridPane();
         BasicDBList times2 = (BasicDBList) res.get(ld.minusDays(2).format(DateTimeFormatter.ofPattern("EEEE")));
-        detailPane2.addRow(0, new Label("Open: "));
-        detailPane2.addRow(0, new Label(times2.get(0).toString()));
+        hoursPane2.addRow(0, new Label("Open: "));
+        hoursPane2.addRow(0, new Label(times2.get(0).toString()));
         
-        detailPane2.addRow(1, new Label("Close: "));
-        detailPane2.addRow(1, new Label(times2.get(1).toString()));
+        hoursPane2.addRow(1, new Label("Close: "));
+        hoursPane2.addRow(1, new Label(times2.get(1).toString()));
         
-        final TitledPane t3 = new TitledPane(ld.minusDays(2).format(DateTimeFormatter.ofPattern("EEEE")), detailPane2);
+        final TitledPane t3 = new TitledPane(ld.minusDays(2).format(DateTimeFormatter.ofPattern("EEEE")), hoursPane2);
         
-        GridPane detailPane3 = new GridPane();
+        GridPane hoursPane3 = new GridPane();
         BasicDBList times3 = (BasicDBList) res.get(ld.minusDays(2).format(DateTimeFormatter.ofPattern("EEEE")));
-        detailPane3.addRow(0, new Label("Open: "));
-        detailPane3.addRow(0, new Label(times3.get(0).toString()));
+        hoursPane3.addRow(0, new Label("Open: "));
+        hoursPane3.addRow(0, new Label(times3.get(0).toString()));
         
-        detailPane3.addRow(1, new Label("Close: "));
-        detailPane3.addRow(1, new Label(times3.get(1).toString()));
+        hoursPane3.addRow(1, new Label("Close: "));
+        hoursPane3.addRow(1, new Label(times3.get(1).toString()));
         
-        final TitledPane t4 = new TitledPane(ld.minusDays(3).format(DateTimeFormatter.ofPattern("EEEE")), detailPane3);
+        final TitledPane t4 = new TitledPane(ld.minusDays(3).format(DateTimeFormatter.ofPattern("EEEE")), hoursPane3);
         
-        GridPane detailPane4 = new GridPane();
+        GridPane hoursPane4 = new GridPane();
         BasicDBList times4 = (BasicDBList) res.get(ld.minusDays(4).format(DateTimeFormatter.ofPattern("EEEE")));
-        detailPane4.addRow(0, new Label("Open: "));
-        detailPane4.addRow(0, new Label(times4.get(0).toString()));
+        hoursPane4.addRow(0, new Label("Open: "));
+        hoursPane4.addRow(0, new Label(times4.get(0).toString()));
         
-        detailPane4.addRow(1, new Label("Close: "));
-        detailPane4.addRow(1, new Label(times4.get(1).toString()));
+        hoursPane4.addRow(1, new Label("Close: "));
+        hoursPane4.addRow(1, new Label(times4.get(1).toString()));
         
-        final TitledPane t5 = new TitledPane(ld.minusDays(4).format(DateTimeFormatter.ofPattern("EEEE")), detailPane4);
+        final TitledPane t5 = new TitledPane(ld.minusDays(4).format(DateTimeFormatter.ofPattern("EEEE")), hoursPane4);
         
-        GridPane detailPane5 = new GridPane();
+        GridPane hoursPane5 = new GridPane();
         BasicDBList times5 = (BasicDBList) res.get(ld.minusDays(5).format(DateTimeFormatter.ofPattern("EEEE")));
-        detailPane5.addRow(0, new Label("Open: "));
-        detailPane5.addRow(0, new Label(times5.get(0).toString()));
+        hoursPane5.addRow(0, new Label("Open: "));
+        hoursPane5.addRow(0, new Label(times5.get(0).toString()));
         
-        detailPane5.addRow(1, new Label("Close: "));
-        detailPane5.addRow(1, new Label(times5.get(1).toString()));
+        hoursPane5.addRow(1, new Label("Close: "));
+        hoursPane5.addRow(1, new Label(times5.get(1).toString()));
         
-        final TitledPane t6 = new TitledPane(ld.minusDays(5).format(DateTimeFormatter.ofPattern("EEEE")), detailPane5);
+        final TitledPane t6 = new TitledPane(ld.minusDays(5).format(DateTimeFormatter.ofPattern("EEEE")), hoursPane5);
         
-        GridPane detailPane6 = new GridPane();
+        GridPane hoursPane6 = new GridPane();
         BasicDBList times6 = (BasicDBList) res.get(ld.minusDays(6).format(DateTimeFormatter.ofPattern("EEEE")));
-        detailPane6.addRow(0, new Label("Open: "));
-        detailPane6.addRow(0, new Label(times6.get(0).toString()));
+        hoursPane6.addRow(0, new Label("Open: "));
+        hoursPane6.addRow(0, new Label(times6.get(0).toString()));
         
-        detailPane6.addRow(1, new Label("Close: "));
-        detailPane6.addRow(1, new Label(times6.get(1).toString()));
+        hoursPane6.addRow(1, new Label("Close: "));
+        hoursPane6.addRow(1, new Label(times6.get(1).toString()));
         
-        final TitledPane t7 = new TitledPane(ld.minusDays(6).format(DateTimeFormatter.ofPattern("EEEE")), detailPane6);
+        final TitledPane t7 = new TitledPane(ld.minusDays(6).format(DateTimeFormatter.ofPattern("EEEE")), hoursPane6);
         
         t.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                         @Override
