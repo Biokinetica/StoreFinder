@@ -11,7 +11,7 @@
 <children>
 <SplitPane dividerPositions="0.25, 0.7506" prefHeight="478.0" prefWidth="696.0" VBox.vgrow="ALWAYS">
 <items>
-<AnchorPane maxWidth="-Infinity" prefHeight="456.0" prefWidth="143.0">
+<AnchorPane prefHeight="456.0" prefWidth="143.0">
 <children>
 <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style=" " text="Your Location" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
 <font>
