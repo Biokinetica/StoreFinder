@@ -12,8 +12,6 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -41,7 +39,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javax.imageio.ImageIO;
 
 public class FXMLController implements Initializable {
     
@@ -173,13 +170,11 @@ public class FXMLController implements Initializable {
                 + ",MI&zoom=14&size=300x200&maptype=roadmap&markers=color:red%7Clabel:A%7C"
                 + coords.get(1) + "," + coords.get(0);
                 
-       /* BufferedImage img = ImageIO.read(new URL(url));
-        File outputfile = new File(s.get("Store").toString()+".png");
-        ImageIO.write(img, "png", outputfile);
-        */
+       
         ImageView iv = new ImageView();
         iv.setImage(new Image(url));
         
+        pane.addRow(6,new Label("Map: "));
         pane.add(iv,1,6);
         
         if(s.containsField("OP")){
