@@ -11,7 +11,7 @@
 <children>
 <SplitPane dividerPositions="0.25, 0.7506" prefHeight="478.0" prefWidth="696.0" VBox.vgrow="ALWAYS">
 <items>
-<AnchorPane prefHeight="456.0" prefWidth="143.0">
+<AnchorPane maxWidth="-Infinity" prefHeight="456.0" prefWidth="190.0">
 <children>
 <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style=" " text="Your Location" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
 <font>
@@ -28,14 +28,14 @@
 </AnchorPane>
 <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="-1.0" prefWidth="-1.0">
 <content>
-<AnchorPane id="Content" fx:id="ScrollAnchor" minHeight="-1.0" minWidth="-1.0" prefHeight="476.0" prefWidth="341.0">
+<AnchorPane id="Content" fx:id="ScrollAnchor" minHeight="-1.0" minWidth="-1.0" prefHeight="478.0" prefWidth="415.0">
 <children>
 <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" prefHeight="21.0" prefWidth="67.0" style=" " text="Results" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false" /><Accordion fx:id="Results" layoutY="41.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="435.0" prefWidth="340.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="41.0" />
 </children>
 </AnchorPane>
 </content>
 </ScrollPane>
-<AnchorPane maxWidth="-Infinity" prefHeight="456.0" prefWidth="180.0">
+<AnchorPane maxWidth="-Infinity" prefHeight="456.0" prefWidth="155.0">
 <children>
 <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style=" " text="Hours" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false" />
                   <Accordion fx:id="Hours" layoutY="41.0" prefHeight="435.0" prefWidth="171.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="41.0" />

@@ -160,7 +160,7 @@ public class FXMLController implements Initializable {
         
         pane.addRow(3, new Label("Phone: "));
         pane.addRow(3, new Label(s.get("Phone").toString()));
-        pane.addRow(4, new Label("Open Play: "));
+        pane.addRow(4, new Label("Open Play:"));
         pane.addRow(6, new Label("Press Gangers: "));
         
         BasicDBObject loc = (BasicDBObject) s.get("loc");
