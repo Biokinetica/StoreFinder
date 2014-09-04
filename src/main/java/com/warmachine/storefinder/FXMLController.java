@@ -161,7 +161,7 @@ public class FXMLController implements Initializable {
         pane.addRow(3, new Label("Phone: "));
         pane.addRow(3, new Label(s.get("Phone").toString()));
         pane.addRow(4, new Label("Open Play: "));
-        pane.addRow(5, new Label("Press Gangers: "));
+        pane.addRow(6, new Label("Press Gangers: "));
         
         BasicDBObject loc = (BasicDBObject) s.get("loc");
         BasicDBList coords = (BasicDBList) loc.get("coordinates");
@@ -174,8 +174,8 @@ public class FXMLController implements Initializable {
         ImageView iv = new ImageView();
         iv.setImage(new Image(url));
         
-        pane.addRow(6,new Label("Map: "));
-        pane.add(iv,1,6);
+        pane.addRow(5,new Label("Map: "));
+        pane.add(iv,1,5);
         
         if(s.containsField("OP")){
             pane.addRow(4, new Label(s.get("OP").toString()));
@@ -186,7 +186,7 @@ public class FXMLController implements Initializable {
         int index = 0;
         
         if(PGs.size() == 1)
-            pane.addRow(5, new Label(PGs.get(index).toString()) );
+            pane.addColumn(1, new Label(PGs.get(index).toString()) );
         else
             while(index != PGs.size()){
         pane.addColumn(1,new Label(PGs.get(index).toString()));
