@@ -7,11 +7,11 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.warmachine.storefinder.FXMLController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.warmachine.storefinder.FXMLController">
 <children>
-<SplitPane dividerPositions="0.25, 0.7506" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+<SplitPane dividerPositions="0.25, 0.7506" prefHeight="478.0" prefWidth="696.0" VBox.vgrow="ALWAYS">
 <items>
-<AnchorPane>
+<AnchorPane maxWidth="-Infinity" prefHeight="456.0" prefWidth="143.0">
 <children>
 <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" minWidth="60.0" prefWidth="-1.0" style=" " text="Your Location" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
 <font>
@@ -35,7 +35,7 @@
 </AnchorPane>
 </content>
 </ScrollPane>
-<AnchorPane>
+<AnchorPane maxWidth="-Infinity" prefHeight="456.0" prefWidth="180.0">
 <children>
 <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style=" " text="Hours" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false" />
                   <Accordion fx:id="Hours" layoutY="41.0" prefHeight="435.0" prefWidth="171.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="41.0" />

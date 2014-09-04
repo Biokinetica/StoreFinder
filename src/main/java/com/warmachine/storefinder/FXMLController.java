@@ -173,10 +173,10 @@ public class FXMLController implements Initializable {
                 + ",MI&zoom=14&size=300x200&maptype=roadmap&markers=color:red%7Clabel:A%7C"
                 + coords.get(1) + "," + coords.get(0);
                 
-        BufferedImage img = ImageIO.read(new URL(url));
+       /* BufferedImage img = ImageIO.read(new URL(url));
         File outputfile = new File(s.get("Store").toString()+".png");
         ImageIO.write(img, "png", outputfile);
-        
+        */
         ImageView iv = new ImageView();
         iv.setImage(new Image(url));
         
