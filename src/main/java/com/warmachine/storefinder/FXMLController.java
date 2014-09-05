@@ -12,7 +12,12 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import java.awt.Desktop;
+import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
@@ -22,11 +27,15 @@ import java.time.format.TextStyle;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
@@ -111,6 +120,16 @@ public class FXMLController implements Initializable {
             handleSearch(m);
     }
     
+    private static void open(URI uri){
+    if (Desktop.isDesktopSupported()) {
+        try {
+            Desktop.getDesktop().browse(uri);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+  }
+    
     @FXML
     private void handleSearch(MouseEvent event) throws IOException {
         
@@ -120,7 +139,7 @@ public class FXMLController implements Initializable {
         DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
         
         
-        double coordinates[] = new double[2];
+        final double coordinates[] = new double[2];
             
             final Geocoder geocoder = new Geocoder();
             GeocoderRequest geocoderRequest;
@@ -145,7 +164,7 @@ public class FXMLController implements Initializable {
             
             LocalDate ld = LocalDate.now();
         
-        for(DBObject s : cursor){
+        for(final DBObject s : cursor){
         GridPane pane = new GridPane();
         GridPane hoursPane = new GridPane();
         
@@ -163,8 +182,8 @@ public class FXMLController implements Initializable {
         pane.addRow(4, new Label("Open Play:"));
         pane.addRow(6, new Label("Press Gangers: "));
         
-        BasicDBObject loc = (BasicDBObject) s.get("loc");
-        BasicDBList coords = (BasicDBList) loc.get("coordinates");
+        final BasicDBObject loc = (BasicDBObject) s.get("loc");
+        final BasicDBList coords = (BasicDBList) loc.get("coordinates");
         String url = "http://maps.googleapis.com/maps/api/staticmap?center=" + URLEncoder.encode(s.get("Address").toString(),"UTF-8") + "," 
                 + URLEncoder.encode(s.get("City").toString(),"UTF-8")
                 + ",MI&zoom=14&size=300x200&maptype=roadmap&markers=color:red%7Clabel:A%7C"
@@ -181,6 +200,27 @@ public class FXMLController implements Initializable {
             pane.addRow(4, new Label(s.get("OP").toString()));
         }
         
+        Hyperlink directions = new Hyperlink("Directions");
+        
+        
+        pane.addRow(7, directions);
+        
+        
+        
+        directions.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>()
+        {
+            @Override
+            public void handle(MouseEvent event){
+                try {
+                    open(new URI("https://www.google.com/maps/dir/" + URLEncoder.encode(AddrLine.getText(),"UTF-8") + ","
+                            + URLEncoder.encode(CityLine.getText(),"UTF-8") + ",MI/" + URLEncoder.encode(s.get("Address").toString(),"UTF-8")
+                            + "," + URLEncoder.encode(s.get("City").toString(),"UTF-8") + ",MI/@" + coordinates[1] + "," + coordinates[0] + ",12z"));
+                } catch (UnsupportedEncodingException | URISyntaxException ex) {
+                    Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            
+        });
         if(s.containsField("PG")){
         BasicDBList PGs = (BasicDBList) s.get("PG");
         int index = 0;
@@ -193,6 +233,7 @@ public class FXMLController implements Initializable {
         ++index;
             }
         }
+        
         TitledPane t = new TitledPane(s.get("Store").toString(), pane );
 
         DBObject res = cursor.next();
