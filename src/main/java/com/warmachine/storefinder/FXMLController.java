@@ -12,6 +12,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -46,6 +47,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javax.swing.JOptionPane;
 
 public class FXMLController implements Initializable {
     
@@ -123,7 +125,11 @@ public class FXMLController implements Initializable {
         try {
             Desktop.getDesktop().browse(uri);
         } catch (IOException ex) {
-            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+            Component frame = null;
+            JOptionPane.showMessageDialog(frame,
+    "Unsupported on your platform.",
+    "Browse error",
+    JOptionPane.ERROR_MESSAGE);
         }
     }
   }
@@ -180,8 +186,8 @@ public class FXMLController implements Initializable {
         pane.addRow(4, new Label("Open Play:"));
         pane.addRow(6, new Label("Press Gangers: "));
         
-        final BasicDBObject loc = (BasicDBObject) s.get("loc");
-        final BasicDBList coords = (BasicDBList) loc.get("coordinates");
+         BasicDBObject loc = (BasicDBObject) s.get("loc");
+         BasicDBList coords = (BasicDBList) loc.get("coordinates");
         String url = "http://maps.googleapis.com/maps/api/staticmap?center=" + URLEncoder.encode(s.get("Address").toString(),"UTF-8") + "," 
                 + URLEncoder.encode(s.get("City").toString(),"UTF-8")
                 + ",MI&zoom=14&size=300x200&maptype=roadmap&markers=color:red%7Clabel:A%7C"
@@ -201,17 +207,21 @@ public class FXMLController implements Initializable {
         Hyperlink directions = new Hyperlink("Directions");
         
         pane.addRow(7, directions);
-                
+
         directions.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>()
         {
             @Override
             public void handle(MouseEvent event){
                 try {
-                    open(new URI("https://www.google.com/maps/dir/" + URLEncoder.encode(AddrLine.getText(),"UTF-8") + ","
+                    open(new URI("www.google.com/maps/dir/" + URLEncoder.encode(AddrLine.getText(),"UTF-8") + ","
                             + URLEncoder.encode(CityLine.getText(),"UTF-8") + ",MI/" + URLEncoder.encode(s.get("Address").toString(),"UTF-8")
                             + "," + URLEncoder.encode(s.get("City").toString(),"UTF-8") + ",MI/@" + coordinates[1] + "," + coordinates[0] + ",12z"));
                 } catch (UnsupportedEncodingException | URISyntaxException ex) {
-                    Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+                    Component frame = null;
+            JOptionPane.showMessageDialog(frame,
+    ex.getMessage(),
+    "Encoding or Syntax Error",
+    JOptionPane.ERROR_MESSAGE);
                 }
             }
             
