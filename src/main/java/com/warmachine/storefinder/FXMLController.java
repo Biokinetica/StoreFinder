@@ -13,7 +13,6 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import java.awt.Desktop;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -29,7 +28,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -202,11 +200,8 @@ public class FXMLController implements Initializable {
         
         Hyperlink directions = new Hyperlink("Directions");
         
-        
         pane.addRow(7, directions);
-        
-        
-        
+                
         directions.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>()
         {
             @Override
