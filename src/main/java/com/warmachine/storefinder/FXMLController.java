@@ -197,17 +197,15 @@ public class FXMLController implements Initializable {
         ImageView iv = new ImageView();
         iv.setImage(new Image(url));
         
+        Hyperlink directions = new Hyperlink(null,iv);
+        
         pane.addRow(5,new Label("Map: "));
-        pane.add(iv,1,5);
+        pane.add(directions,1,5);
         
         if(s.containsField("OP")){
             pane.addRow(4, new Label(s.get("OP").toString()));
         }
         
-        Hyperlink directions = new Hyperlink("Directions");
-        
-        pane.addRow(7, directions);
-
         directions.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>()
         {
             @Override
