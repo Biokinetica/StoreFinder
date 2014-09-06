@@ -27,8 +27,6 @@ import java.time.format.TextStyle;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -91,7 +89,11 @@ public class FXMLController implements Initializable {
         try {
                 address = new ServerAddress("ds049858.mongolab.com",49858);
             } catch (UnknownHostException ex) {
-                System.out.println(ex.getLocalizedMessage());
+            Component frame = null;
+            JOptionPane.showMessageDialog(frame,
+            ex.getMessage(),
+            "Can't connect to database",
+            JOptionPane.ERROR_MESSAGE);
             }
         
         MongoCredential creds = MongoCredential.createMongoCRCredential("User", "warmachine1", "WarmaHordes".toCharArray());
@@ -216,10 +218,10 @@ public class FXMLController implements Initializable {
                             + "," + URLEncoder.encode(s.get("City").toString(),"UTF-8") + ",MI/@" + coordinates[1] + "," + coordinates[0] + ",12z"));
                 } catch (UnsupportedEncodingException | URISyntaxException ex) {
                     Component frame = null;
-            JOptionPane.showMessageDialog(frame,
-    ex.getMessage(),
-    "Encoding or Syntax Error",
-    JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frame,
+                    ex.getMessage(),
+                    "Encoding or Syntax Error",
+                    JOptionPane.ERROR_MESSAGE);
                 }
             }
             
