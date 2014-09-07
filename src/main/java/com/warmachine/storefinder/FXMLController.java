@@ -142,6 +142,15 @@ public class FXMLController implements Initializable {
         
         Hours.getPanes().clear();
         
+        if(CityLine.getLength() == 0 && ZipLine.getLength() == 0)
+        {
+            Component frame = null;
+            JOptionPane.showMessageDialog(frame,
+    "Fill in either the City or Zip fields for results.",
+    "Error: Empty Location",
+    JOptionPane.ERROR_MESSAGE);
+        }
+        
         DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
         
         
