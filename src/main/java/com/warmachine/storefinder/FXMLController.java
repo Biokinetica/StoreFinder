@@ -46,8 +46,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javax.swing.JOptionPane;
-import org.joda.time.DateTime;
-import org.joda.time.LocalTime;
 
 public class FXMLController implements Initializable {
     
@@ -249,7 +247,7 @@ public class FXMLController implements Initializable {
         ++index;
             }
         }
-        
+                
         TitledPane t = new TitledPane(s.get("Store").toString(), pane );
 
         DBObject res = cursor.next();
