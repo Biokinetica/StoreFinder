@@ -136,49 +136,7 @@ public class FXMLController implements Initializable {
     }
   }
     
-    @FXML
-    private void handleSearch(MouseEvent event) throws IOException {
-        
-        
-        Hours.getPanes().clear();
-        
-        if(CityLine.getLength() == 0 && ZipLine.getLength() == 0)
-        {
-            Component frame = null;
-            JOptionPane.showMessageDialog(frame,
-    "Fill in either the City or Zip fields for results.",
-    "Error: Empty Location",
-    JOptionPane.ERROR_MESSAGE);
-        }
-                
-        DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
-        
-        
-        final double coordinates[] = new double[2];
-            
-            final Geocoder geocoder = new Geocoder();
-            GeocoderRequest geocoderRequest;
-            
-        if(AddrLine.getLength() == 0 && CityLine.getLength() == 0)
-           geocoderRequest = new GeocoderRequestBuilder().setAddress(ZipLine.getText() + ", MI ").setLanguage("en").getGeocoderRequest();
-        else if(AddrLine.getLength() == 0)
-            geocoderRequest = new GeocoderRequestBuilder().setAddress(CityLine.getText() + ", MI ").setLanguage("en").getGeocoderRequest();
-        else
-            geocoderRequest = new GeocoderRequestBuilder().setAddress(AddrLine.getText() + " " + CityLine.getText() + ", MI " + ZipLine.getText() ).setLanguage("en").getGeocoderRequest();
-            
-         GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
-
-            coordinates[0] = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLng().doubleValue();
-            coordinates[1] = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLat().doubleValue();
-            
-            storeInfo.put("loc",new BasicDBObject("$near", new BasicDBObject("$geometry", new BasicDBObject("type","Point").append("coordinates", coordinates))).append("$maxDistance", Integer.parseInt(KiloLine.getText()+"000")));
-
-            Results.getPanes().clear();
-        
-            DBCursor cursor = colls.find(storeInfo);
-            
-            LocalDate ld = LocalDate.now();
-        
+    private void getResult(LocalDate ld, DBCursor cursor, final double[] coordinates) throws UnsupportedEncodingException{
         for(final DBObject s : cursor){
         GridPane pane = new GridPane();
         GridPane hoursPane = new GridPane();
@@ -332,6 +290,52 @@ public class FXMLController implements Initializable {
         
         Results.getPanes().add(t);
         }
+    }
+    
+    @FXML
+    private void handleSearch(MouseEvent event) throws IOException {
+        
+        
+        Hours.getPanes().clear();
+        
+        if(CityLine.getLength() == 0 && ZipLine.getLength() == 0)
+        {
+            Component frame = null;
+            JOptionPane.showMessageDialog(frame,
+    "Fill in either the City or Zip fields for results.",
+    "Error: Empty Location",
+    JOptionPane.ERROR_MESSAGE);
+        }
+                
+        DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
+        
+        
+        final double coordinates[] = new double[2];
+            
+            final Geocoder geocoder = new Geocoder();
+            GeocoderRequest geocoderRequest;
+            
+        if(AddrLine.getLength() == 0 && CityLine.getLength() == 0)
+           geocoderRequest = new GeocoderRequestBuilder().setAddress(ZipLine.getText() + ", MI ").setLanguage("en").getGeocoderRequest();
+        else if(AddrLine.getLength() == 0)
+            geocoderRequest = new GeocoderRequestBuilder().setAddress(CityLine.getText() + ", MI ").setLanguage("en").getGeocoderRequest();
+        else
+            geocoderRequest = new GeocoderRequestBuilder().setAddress(AddrLine.getText() + " " + CityLine.getText() + ", MI " + ZipLine.getText() ).setLanguage("en").getGeocoderRequest();
+            
+         GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
+
+            coordinates[0] = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLng().doubleValue();
+            coordinates[1] = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLat().doubleValue();
+            
+            storeInfo.put("loc",new BasicDBObject("$near", new BasicDBObject("$geometry", new BasicDBObject("type","Point").append("coordinates", coordinates))).append("$maxDistance", Integer.parseInt(KiloLine.getText()+"000")));
+
+            Results.getPanes().clear();
+        
+            DBCursor cursor = colls.find(storeInfo);
+            
+            LocalDate ld = LocalDate.now();
+        
+            getResult(ld,cursor,coordinates);
         
     }
 
