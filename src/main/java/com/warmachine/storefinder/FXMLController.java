@@ -12,11 +12,6 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-import com.restfb.Connection;
-import com.restfb.DefaultFacebookClient;
-import com.restfb.FacebookClient;
-import com.restfb.Parameter;
-import com.restfb.types.Event;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.io.IOException;
@@ -30,7 +25,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import javafx.event.EventHandler;
@@ -252,14 +246,6 @@ public class FXMLController implements Initializable {
         pane.addColumn(1,new Label(PGs.get(index).toString()));
         ++index;
             }
-        }
-        
-        FacebookClient facebookClient = new DefaultFacebookClient("CAACEdEose0cBAO8xxbmxTrNP0OE7CzL32fTiN204b3ZBNlZABlsGiyZBhPYiypJiOlZAs8cPYFBSeQToI0YBw3ocXXun82OijhZCjC68ROAYibmLDSZBAF6fe3jMH3AS5LZCj91dvHzASIUHPCOGLBOZADItbsESIxmqPZC1JrUQX6ZCJmw5eZCWE5IAO2QG846lonjdehhwH6TcEjYtsZAhPnI1AIR4MUBQoOUZD");
-        Connection<Event> ev = facebookClient.fetchConnection("GamersSanctuary/events", Event.class);
-        
-        for(Event e : ev.getData()){
-            Event FBevent = facebookClient.fetchObject(e.getId(), Event.class, Parameter.with("limit", 3));
-            System.out.println(FBevent.getDescription());
         }
         
         TitledPane t = new TitledPane(s.get("Store").toString(), pane );
