@@ -123,9 +123,14 @@ public class FXMLController implements Initializable {
     }
     
     private static void open(URI uri){
+        
     if (Desktop.isDesktopSupported()) {
         try {
-            Desktop.getDesktop().browse(uri);
+           if(System.getProperty("os.name").startsWith("Linux"))
+                Runtime.getRuntime().exec("xdg-open " + uri);
+            else
+                Desktop.getDesktop().browse(uri);
+            
         } catch (IOException ex) {
             Component frame = null;
             JOptionPane.showMessageDialog(frame,
@@ -180,7 +185,7 @@ public class FXMLController implements Initializable {
             @Override
             public void handle(MouseEvent event){
                 try {
-                    open(new URI("www.google.com/maps/dir/" + URLEncoder.encode(AddrLine.getText(),"UTF-8") + ","
+                    open(new URI("http://www.google.com/maps/dir/" + URLEncoder.encode(AddrLine.getText(),"UTF-8") + ","
                             + URLEncoder.encode(CityLine.getText(),"UTF-8") + ",MI/" + URLEncoder.encode(s.get("Address").toString(),"UTF-8")
                             + "," + URLEncoder.encode(s.get("City").toString(),"UTF-8") + ",MI/@" + coordinates[1] + "," + coordinates[0] + ",12z"));
                 } catch (UnsupportedEncodingException | URISyntaxException ex) {
