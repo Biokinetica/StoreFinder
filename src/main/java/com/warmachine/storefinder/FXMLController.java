@@ -46,6 +46,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javax.swing.JOptionPane;
+import org.controlsfx.dialog.DialogStyle;
+import org.controlsfx.dialog.Dialogs;
 
 public class FXMLController implements Initializable {
     
@@ -128,15 +130,11 @@ public class FXMLController implements Initializable {
         try {
            if(System.getProperty("os.name").startsWith("Linux"))
                 Runtime.getRuntime().exec("xdg-open " + uri);
-            else
+           else
                 Desktop.getDesktop().browse(uri);
             
         } catch (IOException ex) {
-            Component frame = null;
-            JOptionPane.showMessageDialog(frame,
-    "Unsupported on your platform.",
-    "Browse error",
-    JOptionPane.ERROR_MESSAGE);
+            Dialogs.create().title("Browse Error").message("Unsupported on your platform").style(DialogStyle.NATIVE).showException(ex);
         }
     }
   }
@@ -189,11 +187,7 @@ public class FXMLController implements Initializable {
                             + URLEncoder.encode(CityLine.getText(),"UTF-8") + ",MI/" + URLEncoder.encode(s.get("Address").toString(),"UTF-8")
                             + "," + URLEncoder.encode(s.get("City").toString(),"UTF-8") + ",MI/@" + coordinates[1] + "," + coordinates[0] + ",12z"));
                 } catch (UnsupportedEncodingException | URISyntaxException ex) {
-                    Component frame = null;
-                    JOptionPane.showMessageDialog(frame,
-                    ex.getMessage(),
-                    "Encoding or Syntax Error",
-                    JOptionPane.ERROR_MESSAGE);
+                    Dialogs.create().title("Error").message("Encoding or Syntax Error").style(DialogStyle.NATIVE).showException(ex);
                 }
             }
             
@@ -305,13 +299,10 @@ public class FXMLController implements Initializable {
         
         if(CityLine.getLength() == 0 && ZipLine.getLength() == 0)
         {
-            Component frame = null;
-            JOptionPane.showMessageDialog(frame,
-    "Fill in either the City or Zip fields for results.",
-    "Error: Empty Location",
-    JOptionPane.ERROR_MESSAGE);
+        Dialogs.create().title("Error").message("Error: Empty Location").style(DialogStyle.NATIVE).showError();
         }
-                
+        else{
+        
         DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
         
         
@@ -341,6 +332,7 @@ public class FXMLController implements Initializable {
             LocalDate ld = LocalDate.now();
         
             getResult(ld,cursor,coordinates);
+        }
         
     }
 
