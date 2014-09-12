@@ -12,7 +12,6 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
-import java.awt.Component;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -45,7 +44,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javax.swing.JOptionPane;
 import org.controlsfx.dialog.DialogStyle;
 import org.controlsfx.dialog.Dialogs;
 
@@ -88,14 +86,12 @@ public class FXMLController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        
         try {
                 address = new ServerAddress("ds049858.mongolab.com",49858);
             } catch (UnknownHostException ex) {
-            Component frame = null;
-            JOptionPane.showMessageDialog(frame,
-            ex.getMessage(),
-            "Can't connect to database",
-            JOptionPane.ERROR_MESSAGE);
+            Dialogs.create().title("Connection Error").message("Can't connect to database").style(DialogStyle.NATIVE).showException(ex);
             }
         
         MongoCredential creds = MongoCredential.createMongoCRCredential("User", "warmachine1", "WarmaHordes".toCharArray());
@@ -294,7 +290,6 @@ public class FXMLController implements Initializable {
     @FXML
     private void handleSearch(MouseEvent event) throws IOException {
         
-        
         Hours.getPanes().clear();
         
         if(CityLine.getLength() == 0 && ZipLine.getLength() == 0)
@@ -304,7 +299,6 @@ public class FXMLController implements Initializable {
         else{
         
         DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
-        
         
         final double coordinates[] = new double[2];
             
