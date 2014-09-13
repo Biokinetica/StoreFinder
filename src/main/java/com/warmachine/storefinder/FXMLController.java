@@ -15,17 +15,25 @@ import com.mongodb.ServerAddress;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
+import java.nio.channels.SocketChannel;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -85,9 +93,7 @@ public class FXMLController implements Initializable {
     
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        
-        
+    public void initialize(URL url, ResourceBundle rb) {        
         try {
                 address = new ServerAddress("ds049858.mongolab.com",49858);
             } catch (UnknownHostException ex) {
@@ -134,6 +140,21 @@ public class FXMLController implements Initializable {
         }
     }
   }
+    
+    private boolean checkNetwork() throws SocketException{
+        Enumeration<NetworkInterface> eni = NetworkInterface.getNetworkInterfaces();
+        while(eni.hasMoreElements()) {
+            Enumeration<InetAddress> eia = eni.nextElement().getInetAddresses();
+            while(eia.hasMoreElements()) {
+                InetAddress ia = eia.nextElement();
+                if (!ia.isAnyLocalAddress() && !ia.isLoopbackAddress() && !ia.isSiteLocalAddress()) {
+                    if (!ia.getHostName().equals(ia.getHostAddress()))
+                        return true;
+                }
+            }
+        }
+        return false;
+    }
     
     private void getResult(LocalDate ld, DBCursor cursor, final double[] coordinates) throws UnsupportedEncodingException{
         for(final DBObject s : cursor){
@@ -289,7 +310,11 @@ public class FXMLController implements Initializable {
     
     @FXML
     private void handleSearch(MouseEvent event) throws IOException {
-        
+         
+        if(!checkNetwork()){
+            Dialogs.create().title("Connection Error").message("Can't connect to database").style(DialogStyle.NATIVE).showError();
+            return;
+        }
         Hours.getPanes().clear();
         
         if(CityLine.getLength() == 0 && ZipLine.getLength() == 0)
