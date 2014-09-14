@@ -12,11 +12,11 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import java.awt.Component;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URI;
@@ -24,7 +24,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
-import java.nio.channels.SocketChannel;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
@@ -52,6 +51,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javax.swing.JOptionPane;
 import org.controlsfx.dialog.DialogStyle;
 import org.controlsfx.dialog.Dialogs;
 
@@ -97,10 +97,9 @@ public class FXMLController implements Initializable {
         try {
                 address = new ServerAddress("ds049858.mongolab.com",49858);
             } catch (UnknownHostException ex) {
-            Dialogs.create().title("Connection Error").message("Can't connect to database").style(DialogStyle.NATIVE).showException(ex);
+            Dialogs.create().title("Unknown Host Error").message("Can't connect to database").style(DialogStyle.NATIVE).showException(ex);
             }
-        
-        MongoCredential creds = MongoCredential.createMongoCRCredential("User", "warmachine1", "WarmaHordes".toCharArray());
+            MongoCredential creds = MongoCredential.createMongoCRCredential("User", "warmachine1", "WarmaHordes".toCharArray());
             mongoClient = new MongoClient(address, Arrays.asList(creds));
             storeInfo = new BasicDBObject();
     }    
@@ -195,10 +194,10 @@ public class FXMLController implements Initializable {
             pane.addRow(4, new Label(s.get("OP").toString()));
         }
         
-        directions.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>()
-        {
+        directions.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
             @Override
-            public void handle(MouseEvent event){
+            public void handle(MouseEvent event) {
                 try {
                     open(new URI("http://www.google.com/maps/dir/" + URLEncoder.encode(AddrLine.getText(),"UTF-8") + ","
                             + URLEncoder.encode(CityLine.getText(),"UTF-8") + ",MI/" + URLEncoder.encode(s.get("Address").toString(),"UTF-8")
@@ -207,7 +206,6 @@ public class FXMLController implements Initializable {
                     Dialogs.create().title("Error").message("Encoding or Syntax Error").style(DialogStyle.NATIVE).showException(ex);
                 }
             }
-            
         });
         if(s.containsField("PG")){
         BasicDBList PGs = (BasicDBList) s.get("PG");
@@ -297,47 +295,56 @@ public class FXMLController implements Initializable {
         final TitledPane t7 = new TitledPane(ld.minusDays(6).format(DateTimeFormatter.ofPattern("EEEE")), hoursPane6);
         
         t.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-                        @Override
-                        public void handle(MouseEvent event) { 
-                        Hours.getPanes().clear();
-                        Hours.getPanes().addAll(t1,t2,t3,t4,t5,t6,t7);
-                        };
-                    });
+
+            @Override
+            public void handle(MouseEvent event) {
+                Hours.getPanes().clear();
+                Hours.getPanes().addAll(t1,t2,t3,t4,t5,t6,t7);
+            }
+        });
         
         Results.getPanes().add(t);
         }
     }
     
     @FXML
-    private void handleSearch(MouseEvent event) throws IOException {
-         
-        if(!checkNetwork()){
-            Dialogs.create().title("Connection Error").message("Can't connect to database").style(DialogStyle.NATIVE).showError();
-            return;
-        }
-        Hours.getPanes().clear();
+    private void handleSearch(MouseEvent event) throws UnsupportedEncodingException, SocketException {
+        
+        
+            if(!checkNetwork()){
+                Dialogs.create().title("Connection Error").message("Can't connect to database").style(DialogStyle.NATIVE).showError();
+                return;
+            }
+            
         
         if(CityLine.getLength() == 0 && ZipLine.getLength() == 0)
         {
-        Dialogs.create().title("Error").message("Error: Empty Location").style(DialogStyle.NATIVE).showError();
+        Dialogs.create().title("Error: Empty Location").message("Fill in either the City or Zip fields for results.").style(DialogStyle.NATIVE).showError();
+        return;
         }
-        else{
         
-        DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
+        Hours.getPanes().clear();
         
-        final double coordinates[] = new double[2];
+            DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
+            
+            final double coordinates[] = new double[2];
             
             final Geocoder geocoder = new Geocoder();
             GeocoderRequest geocoderRequest;
             
-        if(AddrLine.getLength() == 0 && CityLine.getLength() == 0)
-           geocoderRequest = new GeocoderRequestBuilder().setAddress(ZipLine.getText() + ", MI ").setLanguage("en").getGeocoderRequest();
-        else if(AddrLine.getLength() == 0)
-            geocoderRequest = new GeocoderRequestBuilder().setAddress(CityLine.getText() + ", MI ").setLanguage("en").getGeocoderRequest();
-        else
-            geocoderRequest = new GeocoderRequestBuilder().setAddress(AddrLine.getText() + " " + CityLine.getText() + ", MI " + ZipLine.getText() ).setLanguage("en").getGeocoderRequest();
+            if(AddrLine.getLength() == 0 && CityLine.getLength() == 0)
+                geocoderRequest = new GeocoderRequestBuilder().setAddress(ZipLine.getText() + ", MI ").setLanguage("en").getGeocoderRequest();
+            else if(AddrLine.getLength() == 0)
+                geocoderRequest = new GeocoderRequestBuilder().setAddress(CityLine.getText() + ", MI ").setLanguage("en").getGeocoderRequest();
+            else
+                geocoderRequest = new GeocoderRequestBuilder().setAddress(AddrLine.getText() + " " + CityLine.getText() + ", MI " + ZipLine.getText() ).setLanguage("en").getGeocoderRequest();
             
-         GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
+            GeocodeResponse geocoderResponse = null;
+            try {
+                geocoderResponse = geocoder.geocode(geocoderRequest);
+            } catch (IOException ex) {
+                Dialogs.create().title("Geocoding Error").message("Can't get GPS Coordinates").style(DialogStyle.NATIVE).showException(ex);
+            }
 
             coordinates[0] = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLng().doubleValue();
             coordinates[1] = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLat().doubleValue();
@@ -349,9 +356,8 @@ public class FXMLController implements Initializable {
             DBCursor cursor = colls.find(storeInfo);
             
             LocalDate ld = LocalDate.now();
-        
-            getResult(ld,cursor,coordinates);
-        }
+            
+                getResult(ld,cursor,coordinates);
         
     }
 
