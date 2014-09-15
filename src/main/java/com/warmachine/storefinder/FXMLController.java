@@ -89,7 +89,12 @@ public class FXMLController implements Initializable {
     
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) {        
+    public void initialize(URL url, ResourceBundle rb) { 
+        
+        if(!checkNetwork()){
+                Dialogs.create().title("Connection Error").message("Can't connect to database").style(DialogStyle.NATIVE).showError();
+            }
+        
         try {
                 address = new ServerAddress("ds049858.mongolab.com",49858);
             } catch (UnknownHostException ex) {
@@ -136,8 +141,13 @@ public class FXMLController implements Initializable {
     }
   }
     
-    private boolean checkNetwork() throws SocketException{
-        Enumeration<NetworkInterface> eni = NetworkInterface.getNetworkInterfaces();
+    private boolean checkNetwork(){
+        Enumeration<NetworkInterface> eni = null;
+        try {
+            eni = NetworkInterface.getNetworkInterfaces();
+        } catch (SocketException ex) {
+            Dialogs.create().title("Connection Checking Error").message("Can't check network connection").style(DialogStyle.NATIVE).showException(ex);
+        }
         while(eni.hasMoreElements()) {
             Enumeration<InetAddress> eia = eni.nextElement().getInetAddresses();
             while(eia.hasMoreElements()) {
@@ -306,12 +316,6 @@ public class FXMLController implements Initializable {
     @FXML
     private void handleSearch(MouseEvent event) throws UnsupportedEncodingException, SocketException {
         
-        
-            if(!checkNetwork()){
-                Dialogs.create().title("Connection Error").message("Can't connect to database").style(DialogStyle.NATIVE).showError();
-                return;
-            }
-            
         
         if(CityLine.getLength() == 0 && ZipLine.getLength() == 0)
         {
