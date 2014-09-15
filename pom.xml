@@ -120,10 +120,5 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.5</version>
         </dependency>
-        <dependency>
-            <groupId>org.controlsfx</groupId>
-            <artifactId>controlsfx</artifactId>
-            <version>8.0.6_20</version>
-        </dependency>
     </dependencies>
 </project>
