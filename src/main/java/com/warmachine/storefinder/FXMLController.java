@@ -48,6 +48,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javax.swing.JOptionPane;
 import org.controlsfx.dialog.DialogStyle;
 import org.controlsfx.dialog.Dialogs;
 
@@ -86,19 +87,36 @@ public class FXMLController implements Initializable {
     @FXML
     private Accordion Hours;
     
+    private boolean isLinux;
     
     
     @Override
     public void initialize(URL url, ResourceBundle rb) { 
         
+        if(System.getProperty("os.name").startsWith("Linux"))
+            isLinux = true;
+        else 
+            isLinux = false;
+        
         if(!checkNetwork()){
+            if(isLinux)
                 Dialogs.create().title("Connection Error").message("Can't connect to database").style(DialogStyle.NATIVE).showError();
+            else
+            {
+            JOptionPane.showMessageDialog(null,
+            "Can't connect to database",
+            "Connection Error",
+-            JOptionPane.ERROR_MESSAGE);
+            }
             }
         
         try {
                 address = new ServerAddress("ds049858.mongolab.com",49858);
             } catch (UnknownHostException ex) {
-            Dialogs.create().title("Unknown Host Error").message("Can't connect to database").style(DialogStyle.NATIVE).showException(ex);
+            JOptionPane.showMessageDialog(null,
+            "Can't connect to database",
+            "Unknown Host Error",
+-            JOptionPane.ERROR_MESSAGE);
             }
             MongoCredential creds = MongoCredential.createMongoCRCredential("User", "warmachine1", "WarmaHordes".toCharArray());
             mongoClient = new MongoClient(address, Arrays.asList(creds));
@@ -136,7 +154,10 @@ public class FXMLController implements Initializable {
                 Desktop.getDesktop().browse(uri);
             
         } catch (IOException ex) {
-            Dialogs.create().title("Browse Error").message("Unsupported on your platform").style(DialogStyle.NATIVE).showException(ex);
+            JOptionPane.showMessageDialog(null,
+            "Unsupported on your platform",
+            "Browse Error",
+-            JOptionPane.ERROR_MESSAGE);
         }
     }
   }
@@ -319,10 +340,19 @@ public class FXMLController implements Initializable {
         
         if(CityLine.getLength() == 0 && ZipLine.getLength() == 0)
         {
-        Dialogs.create().title("Error: Empty Location").message("Fill in either the City or Zip fields for results.").style(DialogStyle.NATIVE).showError();
+            if(!isLinux){
+        Dialogs.create().title("Error: Empty Location").message("Fill in either the City or Zip fields for results.").style(DialogStyle.UNDECORATED).showError();
         return;
         }
-        
+            else
+            {
+            JOptionPane.showMessageDialog(null,
+            "Fill in either the City or Zip fields for results.",
+            "Error: Empty Location",
+-            JOptionPane.ERROR_MESSAGE);
+            return;
+            }
+        }
         Hours.getPanes().clear();
         
             DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
@@ -343,7 +373,10 @@ public class FXMLController implements Initializable {
             try {
                 geocoderResponse = geocoder.geocode(geocoderRequest);
             } catch (IOException ex) {
-                Dialogs.create().title("Geocoding Error").message("Can't get GPS Coordinates").style(DialogStyle.NATIVE).showException(ex);
+            JOptionPane.showMessageDialog(null,
+            "Can't get GPS coordinates",
+            "Geocoding Error",
+-            JOptionPane.ERROR_MESSAGE);
             }
 
             coordinates[0] = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLng().doubleValue();
