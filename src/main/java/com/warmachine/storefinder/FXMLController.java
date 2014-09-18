@@ -25,16 +25,13 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Arrays;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.EventHandler;
@@ -164,6 +161,31 @@ public class FXMLController implements Initializable {
             }
         }
         return false;
+    }
+    
+    private void logSearch(){
+        DBCollection users = mongoClient.getDB("warmachine1").getCollection("Users");
+            String query[] = new String[4];
+            query[0] = AddrLine.getText();
+            query[1] = CityLine.getText();
+            query[2] = ZipLine.getText();
+            query[3] = KiloLine.getText();
+            BasicDBObject location = new BasicDBObject("type","Point");
+            double userCoords[] = new double[2];
+        try {
+            userCoords[0] = Double.parseDouble(Geobytes.get(Geobytes.Longitude));
+            userCoords[1] = Double.parseDouble(Geobytes.get(Geobytes.Latitude));
+        } catch (IllegalArgumentException | IllegalAccessException | IOException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+            location.append("coordinates", userCoords);
+        try {
+            userInfo.append("time",new Date()).append("loc", location).append("ip",IpChecker.getIp()).append("query",new BasicDBObject("addr",AddrLine.getText()).append("city", CityLine.getText()).append("zip", ZipLine.getText()).append("kilos", KiloLine.getText()));
+            users.insert(userInfo);
+        } catch (IOException | IllegalArgumentException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     private void getResult(LocalDate ld, DBCursor cursor, final double[] coordinates) throws UnsupportedEncodingException{
@@ -361,30 +383,7 @@ public class FXMLController implements Initializable {
             
             LocalDate ld = LocalDate.now();
             
-            DBCollection users = mongoClient.getDB("warmachine1").getCollection("Users");
-            String query[] = new String[4];
-            query[0] = AddrLine.getText();
-            query[1] = CityLine.getText();
-            query[2] = ZipLine.getText();
-            query[3] = KiloLine.getText();
-            BasicDBObject location = new BasicDBObject("type","Point");
-            double userCoords[] = new double[2];
-        try {
-            userCoords[0] = Double.parseDouble(Geobytes.get(Geobytes.Longitude));
-            userCoords[1] = Double.parseDouble(Geobytes.get(Geobytes.Latitude));
-        } catch (IllegalArgumentException | IllegalAccessException | IOException ex) {
-            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            
-            Calendar dateTime = Calendar.getInstance(TimeZone.getTimeZone("EST"));
-            
-            location.append("coordinates", userCoords);
-        try {
-            userInfo.append("time",dateTime.getTime()).append("loc", location).append("ip",IpChecker.getIp()).append("query",query);
-            users.insert(userInfo);
-        } catch (IOException | IllegalArgumentException ex) {
-            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            logSearch();
             
                 getResult(ld,cursor,coordinates);
         
