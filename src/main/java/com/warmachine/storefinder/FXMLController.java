@@ -12,6 +12,7 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
+import com.smartechz.tools.mygeoloc.Geobytes;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -24,12 +25,18 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -84,7 +91,7 @@ public class FXMLController implements Initializable {
     private BasicDBObject storeInfo;
     @FXML
     private Accordion Hours;
-        
+    private BasicDBObject userInfo;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) { 
@@ -100,6 +107,7 @@ public class FXMLController implements Initializable {
             MongoCredential creds = MongoCredential.createMongoCRCredential("User", "warmachine1", "WarmaHordes".toCharArray());
             mongoClient = new MongoClient(address, Arrays.asList(creds));
             storeInfo = new BasicDBObject();
+            userInfo = new BasicDBObject();
     }    
     
     @FXML
@@ -352,6 +360,31 @@ public class FXMLController implements Initializable {
             DBCursor cursor = colls.find(storeInfo);
             
             LocalDate ld = LocalDate.now();
+            
+            DBCollection users = mongoClient.getDB("warmachine1").getCollection("Users");
+            String query[] = new String[4];
+            query[0] = AddrLine.getText();
+            query[1] = CityLine.getText();
+            query[2] = ZipLine.getText();
+            query[3] = KiloLine.getText();
+            BasicDBObject location = new BasicDBObject("type","Point");
+            double userCoords[] = new double[2];
+        try {
+            userCoords[0] = Double.parseDouble(Geobytes.get(Geobytes.Longitude));
+            userCoords[1] = Double.parseDouble(Geobytes.get(Geobytes.Latitude));
+        } catch (IllegalArgumentException | IllegalAccessException | IOException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+            Calendar dateTime = Calendar.getInstance(TimeZone.getTimeZone("EST"));
+            
+            location.append("coordinates", userCoords);
+        try {
+            userInfo.append("time",dateTime.getTime()).append("loc", location).append("ip",IpChecker.getIp()).append("query",query);
+            users.insert(userInfo);
+        } catch (IOException | IllegalArgumentException ex) {
+            Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
+        }
             
                 getResult(ld,cursor,coordinates);
         
