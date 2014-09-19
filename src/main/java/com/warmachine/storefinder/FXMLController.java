@@ -79,7 +79,7 @@ public class FXMLController implements Initializable {
     @FXML
     private Button SearchButton;
     
-    private ServerAddress address;
+    private ServerAddress address ,address1;
     
     private MongoClient mongoClient;
     @FXML
@@ -89,6 +89,7 @@ public class FXMLController implements Initializable {
     @FXML
     private Accordion Hours;
     private BasicDBObject userInfo;
+    private DBCollection users, colls;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) { 
@@ -97,12 +98,14 @@ public class FXMLController implements Initializable {
             JOptionPane.showMessageDialog(null,"Can't connect to database","Connection Error",JOptionPane.ERROR_MESSAGE); 
         
         try {
-                address = new ServerAddress("ds049858.mongolab.com",49858);
+                address = new ServerAddress("ds039000.mongolab.com",39000);
             } catch (UnknownHostException ex) {
             JOptionPane.showMessageDialog(null,"Can't connect to database","Unknown Host Error",JOptionPane.ERROR_MESSAGE);
             }
-            MongoCredential creds = MongoCredential.createMongoCRCredential("User", "warmachine1", "WarmaHordes".toCharArray());
+            MongoCredential creds = MongoCredential.createMongoCRCredential("User", "warmachine", "WarmaHordes".toCharArray());
             mongoClient = new MongoClient(address, Arrays.asList(creds));
+            colls = mongoClient.getDB("warmachine").getCollection("Stores");
+            users = mongoClient.getDB("warmachine").getCollection("Users");
             storeInfo = new BasicDBObject();
             userInfo = new BasicDBObject();
     }    
@@ -164,7 +167,7 @@ public class FXMLController implements Initializable {
     }
     
     private void logSearch(){
-        DBCollection users = mongoClient.getDB("warmachine1").getCollection("Users");
+        
             String query[] = new String[4];
             query[0] = AddrLine.getText();
             query[1] = CityLine.getText();
@@ -181,7 +184,7 @@ public class FXMLController implements Initializable {
             
             location.append("coordinates", userCoords);
         try {
-            userInfo.append("time",new Date()).append("loc", location).append("ip",IpChecker.getIp()).append("query",new BasicDBObject("addr",AddrLine.getText()).append("city", CityLine.getText()).append("zip", ZipLine.getText()).append("kilos", KiloLine.getText()));
+            userInfo.append("time",new Date()).append("loc", location).append("ip",IpChecker.getIp()).append("query",new BasicDBObject("addr",AddrLine.getText()).append("city", CityLine.getText()).append("zip", ZipLine.getText()).append("kilos", Integer.parseInt(KiloLine.getText())));
             users.insert(userInfo);
         } catch (IOException | IllegalArgumentException ex) {
             Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
@@ -350,8 +353,6 @@ public class FXMLController implements Initializable {
             return;
         }
         Hours.getPanes().clear();
-        
-            DBCollection colls = mongoClient.getDB("warmachine1").getCollection("Stores");
             
             final double coordinates[] = new double[2];
             
@@ -383,9 +384,8 @@ public class FXMLController implements Initializable {
             
             LocalDate ld = LocalDate.now();
             
-            logSearch();
-            
                 getResult(ld,cursor,coordinates);
+                logSearch();
         
     }
 
