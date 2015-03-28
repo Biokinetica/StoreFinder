@@ -4,45 +4,17 @@ import com.google.code.geocoder.Geocoder;
 import com.google.code.geocoder.GeocoderRequestBuilder;
 import com.google.code.geocoder.model.GeocodeResponse;
 import com.google.code.geocoder.model.GeocoderRequest;
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
+import com.mongodb.*;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import com.smartechz.tools.mygeoloc.Geobytes;
-import java.awt.Desktop;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.net.UnknownHostException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Accordion;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -52,7 +24,19 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javax.swing.JOptionPane;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.*;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class FXMLController implements Initializable {
     
@@ -79,7 +63,7 @@ public class FXMLController implements Initializable {
     @FXML
     private Button SearchButton;
     
-    private ServerAddress address ,address1;
+    private ServerAddress address;
     
     private MongoClient mongoClient;
     @FXML
@@ -89,7 +73,7 @@ public class FXMLController implements Initializable {
     @FXML
     private Accordion Hours;
     private BasicDBObject userInfo;
-    private DBCollection users, colls;
+    private MongoCollection<DBObject> users, colls;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) { 
@@ -97,15 +81,13 @@ public class FXMLController implements Initializable {
         if(!checkNetwork())
             JOptionPane.showMessageDialog(null,"Can't connect to database","Connection Error",JOptionPane.ERROR_MESSAGE); 
         
-        try {
+
                 address = new ServerAddress("ds039000.mongolab.com",39000);
-            } catch (UnknownHostException ex) {
-            JOptionPane.showMessageDialog(null,"Can't connect to database","Unknown Host Error",JOptionPane.ERROR_MESSAGE);
-            }
-            MongoCredential creds = MongoCredential.createMongoCRCredential("User", "warmachine", "WarmaHordes".toCharArray());
-            mongoClient = new MongoClient(address, Arrays.asList(creds));
-            colls = mongoClient.getDB("warmachine").getCollection("Stores");
-            users = mongoClient.getDB("warmachine").getCollection("Users");
+
+            List<MongoCredential> creds = Arrays.asList(MongoCredential.createMongoCRCredential("User", "warmachine", "WarmaHordes".toCharArray()));
+            mongoClient = new MongoClient(address,creds);
+            colls = mongoClient.getDatabase("warmachine").getCollection("Stores",DBObject.class);
+            users = mongoClient.getDatabase("warmachine").getCollection("Users",DBObject.class);
             storeInfo = new BasicDBObject();
             userInfo = new BasicDBObject();
     }    
@@ -185,14 +167,15 @@ public class FXMLController implements Initializable {
             location.append("coordinates", userCoords);
         try {
             userInfo.append("time",new Date()).append("loc", location).append("ip",IpChecker.getIp()).append("query",new BasicDBObject("addr",AddrLine.getText()).append("city", CityLine.getText()).append("zip", ZipLine.getText()).append("kilos", Integer.parseInt(KiloLine.getText())));
-            users.insert(userInfo);
+
+            users.insertOne(userInfo);
         } catch (IOException | IllegalArgumentException ex) {
             Logger.getLogger(FXMLController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    private void getResult(LocalDate ld, DBCursor cursor, final double[] coordinates) throws UnsupportedEncodingException{
-        for(final DBObject s : cursor){
+    private void getResult(LocalDate ld, FindIterable<DBObject> cursor, final double[] coordinates) throws UnsupportedEncodingException{
+        for(DBObject s : cursor){
         GridPane pane = new GridPane();
         GridPane hoursPane = new GridPane();
         
@@ -257,10 +240,8 @@ public class FXMLController implements Initializable {
         }
         
         TitledPane t = new TitledPane(s.get("Store").toString(), pane );
-
-        DBObject res = cursor.next();
         
-        BasicDBList times = (BasicDBList) res.get(ld.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US));
+        BasicDBList times = (BasicDBList) s.get(ld.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US));
         
         hoursPane.addRow(0, new Label("Open: "));
         hoursPane.addRow(0, new Label(times.get(0).toString()));
@@ -271,7 +252,7 @@ public class FXMLController implements Initializable {
         final TitledPane t1 = new TitledPane(ld.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.US), hoursPane );
         
         GridPane hoursPane1 = new GridPane();
-        BasicDBList times1 = (BasicDBList) res.get(ld.minusDays(1).format(DateTimeFormatter.ofPattern("EEEE")));
+        BasicDBList times1 = (BasicDBList) s.get(ld.minusDays(1).format(DateTimeFormatter.ofPattern("EEEE")));
         hoursPane1.addRow(0, new Label("Open: "));
         hoursPane1.addRow(0, new Label(times1.get(0).toString()));
         
@@ -281,7 +262,7 @@ public class FXMLController implements Initializable {
         final TitledPane t2 = new TitledPane(ld.minusDays(1).format(DateTimeFormatter.ofPattern("EEEE")), hoursPane1);
         
         GridPane hoursPane2 = new GridPane();
-        BasicDBList times2 = (BasicDBList) res.get(ld.minusDays(2).format(DateTimeFormatter.ofPattern("EEEE")));
+        BasicDBList times2 = (BasicDBList) s.get(ld.minusDays(2).format(DateTimeFormatter.ofPattern("EEEE")));
         hoursPane2.addRow(0, new Label("Open: "));
         hoursPane2.addRow(0, new Label(times2.get(0).toString()));
         
@@ -291,7 +272,7 @@ public class FXMLController implements Initializable {
         final TitledPane t3 = new TitledPane(ld.minusDays(2).format(DateTimeFormatter.ofPattern("EEEE")), hoursPane2);
         
         GridPane hoursPane3 = new GridPane();
-        BasicDBList times3 = (BasicDBList) res.get(ld.minusDays(3).format(DateTimeFormatter.ofPattern("EEEE")));
+        BasicDBList times3 = (BasicDBList) s.get(ld.minusDays(3).format(DateTimeFormatter.ofPattern("EEEE")));
         hoursPane3.addRow(0, new Label("Open: "));
         hoursPane3.addRow(0, new Label(times3.get(0).toString()));
         
@@ -301,7 +282,7 @@ public class FXMLController implements Initializable {
         final TitledPane t4 = new TitledPane(ld.minusDays(3).format(DateTimeFormatter.ofPattern("EEEE")), hoursPane3);
         
         GridPane hoursPane4 = new GridPane();
-        BasicDBList times4 = (BasicDBList) res.get(ld.minusDays(4).format(DateTimeFormatter.ofPattern("EEEE")));
+        BasicDBList times4 = (BasicDBList) s.get(ld.minusDays(4).format(DateTimeFormatter.ofPattern("EEEE")));
         hoursPane4.addRow(0, new Label("Open: "));
         hoursPane4.addRow(0, new Label(times4.get(0).toString()));
         
@@ -311,7 +292,7 @@ public class FXMLController implements Initializable {
         final TitledPane t5 = new TitledPane(ld.minusDays(4).format(DateTimeFormatter.ofPattern("EEEE")), hoursPane4);
         
         GridPane hoursPane5 = new GridPane();
-        BasicDBList times5 = (BasicDBList) res.get(ld.minusDays(5).format(DateTimeFormatter.ofPattern("EEEE")));
+        BasicDBList times5 = (BasicDBList) s.get(ld.minusDays(5).format(DateTimeFormatter.ofPattern("EEEE")));
         hoursPane5.addRow(0, new Label("Open: "));
         hoursPane5.addRow(0, new Label(times5.get(0).toString()));
         
@@ -321,7 +302,7 @@ public class FXMLController implements Initializable {
         final TitledPane t6 = new TitledPane(ld.minusDays(5).format(DateTimeFormatter.ofPattern("EEEE")), hoursPane5);
         
         GridPane hoursPane6 = new GridPane();
-        BasicDBList times6 = (BasicDBList) res.get(ld.minusDays(6).format(DateTimeFormatter.ofPattern("EEEE")));
+        BasicDBList times6 = (BasicDBList) s.get(ld.minusDays(6).format(DateTimeFormatter.ofPattern("EEEE")));
         hoursPane6.addRow(0, new Label("Open: "));
         hoursPane6.addRow(0, new Label(times6.get(0).toString()));
         
@@ -376,18 +357,17 @@ public class FXMLController implements Initializable {
             coordinates[0] = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLng().doubleValue();
             coordinates[1] = geocoderResponse.getResults().get(0).getGeometry().getLocation().getLat().doubleValue();
 
-        //System.out.println();
-            
-            storeInfo.put("loc",new BasicDBObject("$near", new BasicDBObject("$geometry", new BasicDBObject("type","Point").append("coordinates", coordinates)).append("$maxDistance",Integer.parseInt(KiloLine.getText()+"000"))));
+            storeInfo.append("loc", new BasicDBObject("$near", new BasicDBObject("$geometry", new BasicDBObject("type", "Point").append("coordinates", coordinates)).append("$maxDistance", Integer.parseInt(KiloLine.getText() + "000"))));
 
             Results.getPanes().clear();
-        
-            DBCursor cursor = colls.find(storeInfo);
+
+        FindIterable<DBObject> cursor = colls.find(storeInfo);
             
             LocalDate ld = LocalDate.now();
             
                 getResult(ld,cursor,coordinates);
                 logSearch();
+                userInfo.clear();
         
     }
 

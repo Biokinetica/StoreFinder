@@ -77,7 +77,7 @@
     <option name="useMavenEmbedder" value="false" />
     <option name="useFilter" value="false" />
     <option name="Batch Mode" value="false" />
-    <option name="Check Plugin Updates" value="false" />
+    <option name="Check Plugin Updates" value="true" />
     <option name="Debug" value="false" />
     <option name="Errors" value="false" />
     <option name="Fail At End" value="false" />
@@ -90,7 +90,7 @@
     <option name="Offline" value="false" />
     <option name="Reactor" value="false" />
     <option name="Strict Checksums" value="false" />
-    <option name="Update Plugins" value="false" />
+    <option name="Update Plugins" value="true" />
     <option name="Update Snapshots" value="false" />
     <option name="Skip Tests" value="false" />
     <pom-list />
