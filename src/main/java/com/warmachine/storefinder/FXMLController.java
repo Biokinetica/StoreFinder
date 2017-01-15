@@ -5,6 +5,11 @@ import com.google.code.geocoder.GeocoderRequestBuilder;
 import com.google.code.geocoder.model.GeocodeResponse;
 import com.google.code.geocoder.model.GeocoderRequest;
 import com.mongodb.*;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import com.mongodb.ServerAddress;
+import com.mongodb.MongoCredential;
+import com.mongodb.MongoClientOptions;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.smartechz.tools.mygeoloc.Geobytes;
@@ -82,9 +87,9 @@ public class FXMLController implements Initializable {
             JOptionPane.showMessageDialog(null,"Can't connect to database","Connection Error",JOptionPane.ERROR_MESSAGE); 
         
 
-                address = new ServerAddress("ds039000.mongolab.com",39000);
+                address = new ServerAddress("ds039000.mlab.com",39000);
 
-            List<MongoCredential> creds = Arrays.asList(MongoCredential.createMongoCRCredential("User", "warmachine", "WarmaHordes".toCharArray()));
+            List<MongoCredential> creds = Arrays.asList(MongoCredential.createCredential("User", "warmachine", "WarmaHordes".toCharArray()));
             mongoClient = new MongoClient(address,creds);
             colls = mongoClient.getDatabase("warmachine").getCollection("Stores",DBObject.class);
             users = mongoClient.getDatabase("warmachine").getCollection("Users",DBObject.class);
